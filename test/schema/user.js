@@ -9,16 +9,16 @@ module.exports = {
     key: ['user_id'],
     schema: {
         user_id: {
-            type: String,
+            type: 'varchar',
             required: true,
             unique: true
         },
         name: {
-            type: String,
+            type: 'varchar',
             default: ''
         },
         point: {
-            type: Number,
+            type: 'int',
             default: 0
         }
     }

@@ -9,15 +9,15 @@ module.exports = {
     key: ['user_id', 'item_id'],
     schema: {
         user_id: {
-            type: String,
+            type: 'varchar',
             required: true
         },
         item_id: {
-            type: String,
+            type: 'varchar',
             required: true
         },
         name: {
-            type: String,
+            type: 'varchar',
             default: ''
         }
     },

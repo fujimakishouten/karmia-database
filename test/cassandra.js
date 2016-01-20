@@ -28,7 +28,8 @@ before(function (done) {
 
         // Configure database
         function (done) {
-            db.configure(require('./schema'), done);
+            db.define(require('./schema'));
+            db.setup(done);
         }
     ], done);
 });

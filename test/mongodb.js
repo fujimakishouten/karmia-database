@@ -33,9 +33,10 @@ before(function (done) {
             connection.db.dropDatabase(done);
         },
 
-        // Configure database
+        // Setup database
         function (done) {
-            db.configure(require('./schema'), done);
+            db.define(require('./schema'));
+            db.setup(done);
         }
     ], done);
 });

@@ -6,7 +6,7 @@
     "dependencies": {
         "cassie-odm": ">= 0.1.6",
         "lodash": ">=3.10.1",
-        "mongoose": ">= 4.3.4 ",
+        "mongoose": "4.3.4 ",
         "neo-async": ">= 1.7.2"
     },
     "devDependencies": {

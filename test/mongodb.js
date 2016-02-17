@@ -277,6 +277,35 @@ describe('karmia-database', function () {
                 ], done);
             });
         });
+
+        describe('sequence', function () {
+            it('Should get sequence', function (done) {
+                const key = 'TEST_SEQUENCE',
+                    sequence = db.sequence(key);
+
+                async.waterfall([
+                    // Get sequence
+                    sequence.get.bind(sequence),
+
+                    // Check sequence
+                    function (result, done) {
+                        expect(result).to.be(1);
+
+                        done();
+                    },
+
+                    // Get sequence
+                    sequence.get.bind(sequence),
+
+                    // Check sequence
+                    function (result, done) {
+                        expect(result).to.be(2);
+
+                        done();
+                    }
+                ], done);
+            });
+        });
     });
 });
 

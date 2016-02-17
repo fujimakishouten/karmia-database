@@ -7,8 +7,10 @@
 
 // Variables
 var db,
+    util = require('util'),
     _ = require('lodash'),
     async = require('neo-async'),
+    cassie = require('cassie-odm'),
     expect = require('expect.js'),
     database = require('../'),
     config = {
@@ -22,9 +24,13 @@ before(function (done) {
     db = database('cassandra', config);
     async.series([
         // Connect to database
-        function (done) {
-            db.connect(done);
-        },
+        db.connect.bind(db),
+
+        // Drop existing keyspace
+        cassie.deleteKeyspace.bind(cassie, config),
+
+        // Ensure keyspace
+        cassie.checkKeyspace.bind(cassie, config),
 
         // Configure database
         function (done) {
@@ -264,6 +270,35 @@ describe('karmia-database', function () {
                     // Expect user data
                     function (result, done) {
                         expect(result).to.be(null);
+
+                        done();
+                    }
+                ], done);
+            });
+        });
+
+        describe('sequence', function () {
+            it('Should get sequence', function (done) {
+                const key = 'TEST_SEQUENCE',
+                    sequence = db.sequence(key);
+
+                async.waterfall([
+                    // Get sequence
+                    sequence.get.bind(sequence),
+
+                    // Check sequence
+                    function (result, done) {
+                        expect(result).to.be(1);
+
+                        done();
+                    },
+
+                    // Get sequence
+                    sequence.get.bind(sequence),
+
+                    // Check sequence
+                    function (result, done) {
+                        expect(result).to.be(2);
 
                         done();
                     }

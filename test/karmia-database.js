@@ -6,10 +6,7 @@
 
 
 // Variables
-var db,
-    _ = require('lodash'),
-    async = require('neo-async'),
-    expect = require('expect.js'),
+var expect = require('expect.js'),
     database = require('../');
 
 // Test

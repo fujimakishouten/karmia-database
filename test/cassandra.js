@@ -259,7 +259,7 @@ describe('karmia-database', function () {
 
                     // Delete user data
                     function (done) {
-                        user.delete({user_id: user_id}, done);
+                        user.remove({user_id: user_id}, done);
                     },
 
                     // Get user data

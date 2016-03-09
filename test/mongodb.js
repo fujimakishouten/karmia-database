@@ -230,8 +230,8 @@ describe('karmia-database', function () {
             });
         });
 
-        describe('delete', function () {
-            it('Should delete user data', function (done) {
+        describe('remove', function () {
+            it('Should remove user data', function (done) {
                 const user = db.table('user'),
                     user_id = 'USER_ID_001',
                     name = 'USER_NAME_001',
@@ -260,7 +260,7 @@ describe('karmia-database', function () {
 
                     // Delete user data
                     function (done) {
-                        user.delete({user_id: user_id}, done);
+                        user.remove({user_id: user_id}, done);
                     },
 
                     // Get user data

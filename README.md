@@ -9,8 +9,6 @@ npm install karmia-database
 
 ## Example
 
-### Configure
-
 ```JavaScript
 const karmia_database = require('karmia-database'),
     database = karmia_database({

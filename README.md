@@ -28,9 +28,10 @@ database.connect(callback);
 ## Define schema and models
 
 ```JavaScript
-database.define('application', {
+// Schema definition
+const schema = {
     key: 'application_id',
-    schema: {
+    properties: {
         application_id: {
             type: 'varchar',
             required: true,
@@ -52,10 +53,43 @@ database.define('application', {
     indexes: [
         {fields: {api_key: 1, api_secret: 1}, options: {unique: true}}
     ]
-});
+};
 
-// Defining models
+// Define schema
+database.define('application', schema);
+
+// Define models
 database.setup(callback);
+```
+
+## Validate schema
+
+```JavaScript
+// Synchronous call
+const errors = database.validateSchema(schema);
+
+// Asynchronous call
+database.validateSchema(schema, function (errors) {
+});
+```
+
+## Validate data
+
+```JavaScript
+const table = database.table('application'),
+    data = {
+        application_id: 'application_id',
+        name: 'name',
+        api_key: uuid.v4(),
+        api_secret: crypto.randomBytes(32).toString('base64')
+    };
+
+// Synchronous call
+table.validate(data);
+
+// Asynchronous call
+table.validate(data, function (errors) {
+});
 ```
 
 ## Save data
@@ -71,7 +105,6 @@ table.set({
     api_secret: crypto.randomBytes(32).toString('base64')
 }, callback);
 ```
-
 
 ## Find data
 

@@ -6,8 +6,9 @@
 
 // Export module
 module.exports = {
+    type: 'object',
     key: ['user_id'],
-    schema: {
+    properties: {
         user_id: {
             type: 'varchar',
             required: true,

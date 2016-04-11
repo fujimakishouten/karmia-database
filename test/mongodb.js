@@ -45,6 +45,37 @@ before(function (done) {
 // Test
 describe('karmia-database', function () {
     describe('mongodb', function () {
+        describe('validate', function () {
+            it('Should validate data', function (done) {
+                const table = db.table('user'),
+                    data = {
+                        user_id: 'USER_ID_001',
+                        name: 'USER_NAME_001',
+                        point: 1
+                    };
+
+                expect(table.validate(data)).to.eql([]);
+
+                done();
+            });
+
+            it('Should be error', function (done) {
+                const table = db.table('user'),
+                    data = {
+                        user_id: 'USER_ID_001',
+                        name: {first: 'FirstName', last: 'LastName'},
+                        point: 1
+                    },
+                    errors = table.validate(data),
+                    error = _.first(errors);
+                expect(errors).to.have.length(1);
+                expect(_.chain(error).keys().sort().value()).to.eql(['actual', 'message', 'property']);
+                expect(error.actual).to.be('object');
+
+                done();
+            });
+        });
+
         describe('set', function () {
             it('Should set data', function (done) {
                 const user = db.table('user'),

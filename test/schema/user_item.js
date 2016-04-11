@@ -10,15 +10,15 @@ module.exports = {
     key: ['user_id', 'item_id'],
     properties: {
         user_id: {
-            type: 'varchar',
+            type: 'string',
             required: true
         },
         item_id: {
-            type: 'varchar',
+            type: 'string',
             required: true
         },
         name: {
-            type: 'varchar',
+            type: 'string',
             default: ''
         }
     },

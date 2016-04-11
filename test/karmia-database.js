@@ -6,8 +6,23 @@
 
 
 // Variables
-var expect = require('expect.js'),
-    database = require('../');
+var _ = require('lodash'),
+    expect = require('expect.js'),
+    database = require('../'),
+    schema = {
+        type: 'object',
+        properties: {
+            key: {
+                type: 'string',
+                required: true,
+                unique: true
+            },
+            value: {
+                type: 'string',
+                default: ''
+            }
+        }
+    };
 
 // Test
 describe('karmia-database', function () {
@@ -38,6 +53,51 @@ describe('karmia-database', function () {
             expect(db.adapter.host).to.be(config.host);
             expect(db.adapter.port).to.be(config.port);
             expect(db.adapter.database).to.be(config.database);
+        });
+    });
+
+    describe('validateSchema', function () {
+        describe('Should validate schema', function () {
+            it('Sync', function (done) {
+                const db = database('mongodb', {});
+                expect(db.validateSchema(schema)).to.eql([]);
+
+                done();
+            });
+
+            it('Async', function (done) {
+                const db = database('mongodb', {});
+                expect(db.validateSchema(schema, function (error) {
+                    expect(error).to.eql([]);
+
+                    done();
+                }));
+            });
+        });
+
+        describe('Should be error', function () {
+            it('Sync', function (done) {
+                const db = database('mongodb', {}),
+                    errors = db.validateSchema({type: 'error'});
+                _.forEach(errors, function (error) {
+                    expect(_.chain(error).keys().sort().value()).to.eql(['actual', 'message', 'property']);
+                    expect(error.actual).to.be('error');
+                });
+
+                done();
+            });
+
+            it('Async', function (done) {
+                const db = database('mongodb', {});
+                db.validateSchema({type: 'error'}, function (errors) {
+                    _.forEach(errors, function (error) {
+                        expect(_.chain(error).keys().sort().value()).to.eql(['actual', 'message', 'property']);
+                        expect(error.actual).to.be('error');
+                    });
+
+                    done();
+                });
+            });
         });
     });
 });

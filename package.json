@@ -1,6 +1,6 @@
 {
   "name": "karmia-database",
-  "version": "0.5.0",
+  "version": "0.6.1",
   "description": "Database module of Karmia JavaScript library",
   "author": "Kazuma Fujimaki <fujimaki-k@fujimakishouten.com>",
   "repository": {
@@ -12,7 +12,8 @@
     "cassie-odm": ">=0.1.6",
     "lodash": ">=3.10.1",
     "mongoose": ">=4.3.4 ",
-    "neo-async": ">=1.7.2"
+    "neo-async": ">=1.7.2",
+    "proteus-validator": ">=1.0.2"
   },
   "devDependencies": {
     "mocha": ">=2.3.3",

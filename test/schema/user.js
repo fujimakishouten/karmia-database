@@ -10,16 +10,16 @@ module.exports = {
     key: ['user_id'],
     properties: {
         user_id: {
-            type: 'varchar',
+            type: 'string',
             required: true,
             unique: true
         },
         name: {
-            type: 'varchar',
+            type: 'string',
             default: ''
         },
         point: {
-            type: 'int',
+            type: 'integer',
             default: 0
         }
     }

@@ -7,7 +7,6 @@
 
 // Variables
 var db,
-    util = require('util'),
     _ = require('lodash'),
     async = require('neo-async'),
     cassie = require('cassie-odm'),
@@ -301,6 +300,40 @@ describe('karmia-database', function () {
                     // Expect user data
                     function (result, done) {
                         expect(result).to.be(null);
+
+                        done();
+                    }
+                ], done);
+            });
+        });
+
+        describe('count', function () {
+            it('Should count data', function (done) {
+                const table = db.table('user');
+                async.waterfall([
+                    // Count user data
+                    table.count.bind(table),
+
+                    // Expect result
+                    function (result, done) {
+                        expect(result).to.be(0);
+
+                        done();
+                    },
+
+                    // Save user data
+                    function (done) {
+                        table.set({user_id: 'USER_ID_001'}, done);
+                    },
+
+                    // Count user data
+                    function (result, done) {
+                        table.count(done);
+                    },
+
+                    // Expect result
+                    function (result, done) {
+                        expect(result).to.be(1);
 
                         done();
                     }

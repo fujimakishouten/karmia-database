@@ -106,6 +106,13 @@ table.set({
 }, callback);
 ```
 
+## Count data
+
+```JavaScript
+const table = database.table('application');
+table.count(callback);
+```
+
 ## Find data
 
 ### Find one data

@@ -33,20 +33,20 @@ const schema = {
     key: 'application_id',
     properties: {
         application_id: {
-            type: 'varchar',
+            type: 'string',
             required: true,
             unique: true
         },
         name: {
-            type: 'varchar',
+            type: 'string',
             required: true
         },
         api_key: {
-            type: 'varchar',
+            type: 'string',
             default: ''
         },
         api_secret: {
-            type: 'varchar',
+            type: 'string',
             default: ''
         }
     },

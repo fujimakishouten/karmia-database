@@ -100,6 +100,42 @@ describe('karmia-database', function () {
             });
         });
     });
+
+    describe('converter', function () {
+        describe('error', function () {
+            it('Should convert errors from array to object', function () {
+                const db = database('mongodb', {}),
+                    errors = [
+                        {
+                            property: '$[\'user_id\']',
+                            message: 'property is required',
+                            actual: undefined
+                        }, {
+                            property: '$[\'data\'][\'key\']',
+                            message: 'property is required',
+                            actual: undefined
+                        }
+                    ];
+
+                expect(db.error.convert(errors)).to.eql({
+                    user_id: {
+                        property: '$[\'user_id\']',
+                        message: 'property is required',
+                        actual: undefined,
+                        path: 'user_id'
+                    },
+                    data: {
+                        key: {
+                            property: '$[\'data\'][\'key\']',
+                            message: 'property is required',
+                            actual: undefined,
+                            path: 'data.key'
+                        }
+                    }
+                });
+            });
+        });
+    });
 });
 
 

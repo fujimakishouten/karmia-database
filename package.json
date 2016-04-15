@@ -1,6 +1,6 @@
 {
   "name": "karmia-database",
-  "version": "0.6.7",
+  "version": "0.6.8",
   "description": "Database module of Karmia JavaScript library",
   "author": "Kazuma Fujimaki <fujimaki-k@fujimakishouten.com>",
   "repository": {

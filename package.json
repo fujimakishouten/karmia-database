@@ -1,22 +1,27 @@
 {
-  "name": "karmia-database",
-  "version": "0.7.0",
-  "description": "Database module of Karmia JavaScript library",
-  "author": "Kazuma Fujimaki <fujimaki-k@fujimakishouten.com>",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/fujimakishouten/karmia-database.git"
-  },
-  "homepage": "https://github.com/fujimakishouten/karmia-database",
-  "dependencies": {
-    "cassie-odm": ">=0.1.6",
-    "lodash": ">=4.11.1",
-    "mongoose": ">=4.4.12",
-    "neo-async": ">=1.8.1",
-    "proteus-validator": ">=1.0.2"
-  },
-  "devDependencies": {
-    "mocha": ">=2.4.5",
-    "expect.js": ">=0.3.1"
-  }
+    "name": "karmia-database",
+    "version": "0.7.1",
+    "description": "Database module of Karmia JavaScript library",
+    "homepage": "https://github.com/fujimakishouten/karmia-database",
+    "license": "MIT",
+    "author": "Kazuma Fujimaki <fujimaki-k@fujimakishouten.com>",
+    "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/fujimakishouten/karmia-database.git"
+    },
+    "scripts": {
+        "test": "./node_modules/.bin/mocha ./test"
+    },
+    "dependencies": {
+        "cassie-odm": ">=0.1.6",
+        "lodash": ">=4.11.1",
+        "mongoose": ">=4.4.12",
+        "neo-async": ">=1.8.1",
+        "proteus-validator": ">=1.0.2"
+    },
+    "devDependencies": {
+        "mocha": ">=2.4.5",
+        "expect.js": ">=0.3.1"
+    }
 }

@@ -7,9 +7,9 @@
 
 // Variables
 var db,
-    _ = require('lodash'),
     async = require('neo-async'),
     cassie = require('cassie-odm'),
+    co = require('co'),
     expect = require('expect.js'),
     database = require('../'),
     config = {
@@ -26,7 +26,17 @@ before(function (done) {
         db.connect.bind(db),
 
         // Drop existing keyspace
-        cassie.deleteKeyspace.bind(cassie, config),
+        function (done) {
+            cassie.deleteKeyspace(config, function (error) {
+                if (error) {
+                    if (-1 === error.message.indexOf('Cannot drop non existing keyspace')) {
+                        return done(error);
+                    }
+                }
+
+                done();
+            });
+        },
 
         // Ensure keyspace
         cassie.checkKeyspace.bind(cassie, config),
@@ -64,11 +74,11 @@ describe('karmia-database', function () {
                         name: {first: 'FirstName', last: 'LastName'},
                         point: 1
                     },
-                    errors = table.validate(data),
-                    error = _.first(errors);
+                    errors = table.validate(data);
+
                 expect(errors).to.have.length(1);
-                expect(_.chain(error).keys().sort().value()).to.eql(['actual', 'message', 'property']);
-                expect(error.actual).to.be('object');
+                expect(Object.keys(errors[0]).sort()).to.eql(['actual', 'message', 'property']);
+                expect(errors[0].actual).to.be('object');
 
                 done();
             });
@@ -76,108 +86,77 @@ describe('karmia-database', function () {
 
         describe('set', function () {
             it('Should set data', function (done) {
-                const user = db.table('user'),
-                    user_id = 'USER_ID_001',
-                    name = 'USER_NAME_001',
-                    point = 1;
-                async.waterfall([
-                    // Set user data
-                    function (done) {
-                        user.set({
-                            user_id: user_id,
-                            name: name,
-                            point: point
-                        }, done);
-                    },
+                co(function* () {
+                    const user = db.table('user'),
+                        user_id = 'USER_ID_001',
+                        name = 'USER_NAME_001',
+                        point = 1;
 
-                    // Get user data
-                    function (result, done) {
-                        user.get({user_id: user_id}, done);
-                    },
+                    // Set data
+                    yield user.set({
+                        user_id: user_id,
+                        name: name,
+                        point: point
+                    });
 
-                    // Expect user data
-                    function (result, done) {
-                        expect(result.user_id).to.be(user_id);
-                        expect(result.name).to.be(name);
-                        expect(result.point).to.be(point);
+                    // Check result
+                    const result = yield user.get({user_id: user_id});
+                    expect(result.user_id).to.be(user_id);
+                    expect(result.name).to.be(name);
+                    expect(result.point).to.be(point);
 
-                        done();
-                    }
-                ], done);
+                    done();
+                });
             });
 
             it('Should update data', function (done) {
-                const user = db.table('user'),
-                    user_id = 'USER_ID_001',
-                    name = 'USER_NAME_001',
-                    point = 1,
-                    new_point = 100;
-                async.waterfall([
-                    // Set user data
-                    function (done) {
-                        user.set({
-                            user_id: user_id,
-                            name: name,
-                            point: point
-                        }, done);
-                    },
+                co(function* () {
+                    const user = db.table('user'),
+                        user_id = 'USER_ID_001',
+                        name = 'USER_NAME_001',
+                        point = 1,
+                        new_point = 100;
 
-                    // Get user data
-                    function (result, done) {
-                        user.get({user_id: user_id}, done);
-                    },
+                    // Set data
+                    yield user.set({
+                        user_id: user_id,
+                        name: name,
+                        point: point
+                    });
 
-                    // Expect user data
-                    function (result, done) {
-                        expect(result.user_id).to.be(user_id);
-                        expect(result.name).to.be(name);
-                        expect(result.point).to.be(point);
+                    // Check result
+                    let result = yield  user.get({user_id: user_id});
+                    expect(result.user_id).to.be(user_id);
+                    expect(result.name).to.be(name);
+                    expect(result.point).to.be(point);
 
-                        done();
-                    },
+                    // Update data
+                    yield user.set({
+                        user_id: user_id,
+                        point: new_point
+                    });
 
-                    // Update user data
-                    function (done) {
-                        user.set({
-                            user_id: user_id,
-                            point: new_point
-                        }, done);
-                    },
+                    // Check updated data
+                    result = yield user.get({user_id: user_id});
+                    expect(result.user_id).to.be(user_id);
+                    expect(result.name).to.be(name);
+                    expect(result.point).to.be(new_point);
 
-                    // Get user data
-                    function (result, done) {
-                        user.get({user_id: user_id}, done);
-                    },
-
-                    // Expect user data
-                    function (result, done) {
-                        expect(result.user_id).to.be(user_id);
-                        expect(result.name).to.be(name);
-                        expect(result.point).to.be(new_point);
-
-                        done();
-                    }
-                ], done);
+                    done();
+                });
             });
         });
 
         describe('get', function () {
             it('Should get null', function (done) {
-                const user = db.table('user'),
-                    user_id = 'USER_ID_NOT_FOUND';
-                async.waterfall([
-                    // Get user data
-                    function (done) {
-                        user.get({user_id: user_id}, done);
-                    },
+                co(function* () {
+                    const user = db.table('user'),
+                        user_id = 'USER_ID_NOT_FOUND';
 
-                    // Expect user data
-                    function (result, done) {
-                        expect(result).to.be(null);
+                    expect(yield user.get({user_id: user_id})).to.be(null);
 
-                        done();
-                    }
-                ], done);
+                    done();
+                });
             });
         });
 
@@ -200,173 +179,100 @@ describe('karmia-database', function () {
                 ];
             before(function (done) {
                 const user_item = db.table('user_item'),
-                    parallels = _.map(items, function (item) {
-                    return function (done) {
-                        user_item.set(item, done);
-                    };
-                });
+                    parallels = items.map(function (item) {
+                        return user_item.set(item);
+                    });
 
-                async.parallel(parallels, done);
+                Promise.all(parallels).then(function () {
+                    done();
+                }).catch(done);
             });
 
             it('Should find a user item', function (done) {
-                const user_item = db.table('user_item'),
-                    first = _.first(items);
-                async.waterfall([
-                    // Get user item data
-                    function (done) {
-                        user_item.find({
-                            user_id: first.user_id,
-                            item_id: first.item_id
-                        }, done);
-                    },
+                co(function* () {
+                    const user_item = db.table('user_item'),
+                        result = yield user_item.find({
+                            user_id: items[0].user_id,
+                            item_id: items[0].item_id
+                        });
 
-                    // Expect user item data
-                    function (result, done) {
-                        const item = _.first(result);
-                        expect(result).to.be.an('array');
-                        expect(result).to.have.length(1);
-                        expect(item.user_id).to.be(first.user_id);
-                        expect(item.item_id).to.be(first.item_id);
-                        expect(item.name).to.be(first.name);
+                    expect(result).to.be.an('array');
+                    expect(result).to.have.length(1);
+                    expect(result[0].user_id).to.be(items[0].user_id);
+                    expect(result[0].item_id).to.be(items[0].item_id);
+                    expect(result[0].name).to.be(items[0].name);
 
-                        done();
-                    }
-                ], done);
+                    done();
+                });
             });
 
             it('Should find all user items', function (done) {
-                const user_item = db.table('user_item');
-                async.waterfall([
-                    // Get user item data
-                    function (done) {
-                        user_item.find(done);
-                    },
+                co(function* () {
+                    const user_item = db.table('user_item'),
+                        result = yield user_item.find();
 
-                    // Expect user item data
-                    function (result, done) {
-                        expect(result).to.be.an('array');
-                        expect(result).to.have.length(3);
-                        _.forEach(result, function (item, index) {
-                            expect(item.user_id).to.be(items[index].user_id);
-                            expect(item.item_id).to.be(items[index].item_id);
-                            expect(item.name).to.be(items[index].name);
-                        });
+                    expect(result).to.be.an('array');
+                    expect(result).to.have.length(3);
+                    result.forEach(function (item, index) {
+                        expect(item.user_id).to.be(items[index].user_id);
+                        expect(item.item_id).to.be(items[index].item_id);
+                        expect(item.name).to.be(items[index].name);
+                    });
 
-                        done();
-                    }
-                ], done);
+                    done();
+                });
             });
         });
 
         describe('delete', function () {
             it('Should delete user data', function (done) {
-                const user = db.table('user'),
-                    user_id = 'USER_ID_001',
-                    name = 'USER_NAME_001',
-                    point = 1;
-                async.waterfall([
-                    // Set user data
-                    function (done) {
-                        user.set({
-                            user_id: user_id,
-                            name: name,
-                            point: point
-                        }, done);
-                    },
+                co(function* () {
+                    const user = db.table('user'),
+                        user_id = 'USER_ID_001',
+                        name = 'USER_NAME_001',
+                        point = 1;
 
-                    // Get user data
-                    function (result, done) {
-                        user.get({user_id: user_id}, done);
-                    },
+                    // Set data
+                    yield user.set({
+                        user_id: user_id,
+                        name: name,
+                        point: point
+                    });
 
-                    // Expect user data
-                    function (result, done) {
-                        expect(result).not.to.be(null);
+                    expect(yield user.get({user_id: user_id})).not.to.be(null);
+                    yield user.remove({user_id: user_id});
+                    expect(yield user.get({user_id: user_id})).to.be(null);
 
-                        done();
-                    },
-
-                    // Delete user data
-                    function (done) {
-                        user.remove({user_id: user_id}, done);
-                    },
-
-                    // Get user data
-                    function (result, done) {
-                        user.get({user_id: user_id}, done);
-                    },
-
-                    // Expect user data
-                    function (result, done) {
-                        expect(result).to.be(null);
-
-                        done();
-                    }
-                ], done);
+                    done();
+                });
             });
         });
 
         describe('count', function () {
             it('Should count data', function (done) {
-                const table = db.table('user');
-                async.waterfall([
-                    // Count user data
-                    table.count.bind(table),
+                co(function* () {
+                    const table = db.table('user');
 
-                    // Expect result
-                    function (result, done) {
-                        expect(result).to.be(0);
+                    expect(yield table.count()).to.be(0);
+                    yield table.set({user_id: 'USER_ID_001'});
+                    expect(yield table.count()).to.be(1);
 
-                        done();
-                    },
-
-                    // Save user data
-                    function (done) {
-                        table.set({user_id: 'USER_ID_001'}, done);
-                    },
-
-                    // Count user data
-                    function (result, done) {
-                        table.count(done);
-                    },
-
-                    // Expect result
-                    function (result, done) {
-                        expect(result).to.be(1);
-
-                        done();
-                    }
-                ], done);
+                    done();
+                });
             });
         });
 
         describe('sequence', function () {
             it('Should get sequence', function (done) {
-                const key = 'TEST_SEQUENCE',
-                    sequence = db.sequence(key);
+                co(function* () {
+                    const key = 'TEST_SEQUENCE',
+                        sequence = db.sequence(key);
 
-                async.waterfall([
-                    // Get sequence
-                    sequence.get.bind(sequence),
+                    expect(yield sequence.get()).to.be(1);
+                    expect(yield sequence.get()).to.be(2);
 
-                    // Check sequence
-                    function (result, done) {
-                        expect(result).to.be(1);
-
-                        done();
-                    },
-
-                    // Get sequence
-                    sequence.get.bind(sequence),
-
-                    // Check sequence
-                    function (result, done) {
-                        expect(result).to.be(2);
-
-                        done();
-                    }
-                ], done);
+                    done();
+                });
             });
         });
     });

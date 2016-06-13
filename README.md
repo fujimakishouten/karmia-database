@@ -50,7 +50,7 @@ const schema = {
             default: ''
         }
     },
-    indexes: [
+    index: [
         {fields: {api_key: 1, api_secret: 1}, options: {unique: true}}
     ]
 };

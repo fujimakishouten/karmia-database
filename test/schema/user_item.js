@@ -22,8 +22,9 @@ module.exports = {
             default: ''
         }
     },
-    indexes: [
-        {fields: {user_id: 1, item_id: 1}, options: {unique: true}}
+    index: [
+        {fields: {user_id: 1, item_id: 1}, options: {unique: true}},
+        'name'
     ]
 };
 

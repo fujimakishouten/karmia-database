@@ -1,10 +1,11 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
-/*jslint node: true */
+/* eslint-env es6, mocha, node */
+/* eslint-extends: eslint:recommended */
 'use strict';
 
 
 
-// Require karmia context
+// Export module
 module.exports = require('./lib');
 
 
@@ -16,3 +17,4 @@ module.exports = require('./lib');
  * c-hanging-comment-ender-p: nil
  * End:
  */
+

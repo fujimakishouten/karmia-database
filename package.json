@@ -1,6 +1,6 @@
 {
     "name": "karmia-database",
-    "version": "0.9.2",
+    "version": "0.10.0",
     "description": "Database module of Karmia JavaScript library",
     "homepage": "https://github.com/fujimakishouten/karmia-database",
     "license": "MIT",
@@ -11,18 +11,17 @@
         "url": "https://github.com/fujimakishouten/karmia-database.git"
     },
     "scripts": {
+        "coverage": "./node_modules/.bin/istanbul cover --report cobertura ./node_modules/mocha/bin/_mocha ./test",
         "test": "./node_modules/.bin/mocha ./test"
     },
     "dependencies": {
-        "cassie-odm": ">=0.1.6",
-        "lodash": ">=4.11.1",
-        "mongoose": ">=4.4.12",
-        "neo-async": ">=1.8.1",
-        "proteus-validator": ">=1.0.2"
     },
     "devDependencies": {
-        "co": ">=4.6.0",
+        "eslint": ">=3.5.0",
         "expect.js": ">=0.3.1",
+        "istanbul": ">=0.4.5",
+        "jsonschema": ">=1.1.0",
+        "karmia-database-adapter-memory": ">=0.1.0",
         "mocha": ">=2.4.5"
     }
 }

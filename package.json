@@ -1,6 +1,6 @@
 {
     "name": "karmia-database",
-    "version": "0.10.0",
+    "version": "0.10.1",
     "description": "Database module of Karmia JavaScript library",
     "homepage": "https://github.com/fujimakishouten/karmia-database",
     "license": "MIT",
@@ -23,5 +23,8 @@
         "jsonschema": ">=1.1.0",
         "karmia-database-adapter-memory": ">=0.1.0",
         "mocha": ">=2.4.5"
+    },
+    "engines": {
+        "node": ">=4.0.0"
     }
 }

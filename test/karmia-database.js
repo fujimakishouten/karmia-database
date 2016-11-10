@@ -27,6 +27,28 @@ describe('karmia-database', function () {
         });
     });
 
+    describe('converter', function () {
+        describe('error', function () {
+            it('Should convert error', function (done) {
+                const database = karmia_database(karmia_database_adapter(options));
+                database.define('user', schema);
+                database.connect().then(function () {
+                    return database.sync();
+                }).then(function () {
+                    const table = database.table('user');
+                    table.validate({}).catch(function (error) {
+                        console.log(database.converter.error.convert(error));
+
+
+                        process.exit();
+
+                        done();
+                    });
+                });
+            });
+        });
+    });
+
     describe('getConnection', function () {
         it('Should not get connection', function (done) {
             const database = karmia_database(karmia_database_adapter(options));

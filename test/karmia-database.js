@@ -37,10 +37,9 @@ describe('karmia-database', function () {
                 }).then(function () {
                     const table = database.table('user');
                     table.validate({}).catch(function (error) {
-                        console.log(database.converter.error.convert(error));
+                        const result = database.converter.error.convert(error);
 
-
-                        process.exit();
+                        expect(result).to.have.keys(['user_id', 'email', 'name']);
 
                         done();
                     });

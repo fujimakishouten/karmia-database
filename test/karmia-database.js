@@ -60,7 +60,7 @@ describe('karmia-database', function () {
             const database = karmia_database(karmia_database_adapter(options));
             database.connect().then(function () {
                 const connection = database.getConnection();
-                expect(connection.constructor.name).to.be('Object');
+                expect(connection.constructor.name).to.be('KarmiaDatabaseAdapterMemory');
 
                 done();
             });
@@ -73,7 +73,7 @@ describe('karmia-database', function () {
                 const database = karmia_database(karmia_database_adapter(options));
                 database.connect().then(function () {
                     const connection = database.getConnection();
-                    expect(connection.constructor.name).to.be('Object');
+                    expect(connection.constructor.name).to.be('KarmiaDatabaseAdapterMemory');
 
                     done();
                 }).catch(function (error) {
@@ -85,7 +85,7 @@ describe('karmia-database', function () {
                 const database = karmia_database(karmia_database_adapter(options));
                 database.connect(function () {
                     const connection = database.getConnection();
-                    expect(connection.constructor.name).to.be('Object');
+                    expect(connection.constructor.name).to.be('KarmiaDatabaseAdapterMemory');
 
                     done();
                 });
@@ -1034,7 +1034,7 @@ describe('karmia-database', function () {
                             expect(updated[key]).to.be(result[key]);
                         });
 
-                        return user.get({user_id: data.user_id});
+                        return user.get();
                     }).then(function (result) {
                         Object.keys(updated).forEach(function (key) {
                             expect(updated[key]).to.be(result[key]);

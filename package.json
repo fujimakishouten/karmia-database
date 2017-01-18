@@ -1,6 +1,6 @@
 {
     "name": "karmia-database",
-    "version": "0.10.6",
+    "version": "0.11.0",
     "description": "Database module of Karmia JavaScript library",
     "homepage": "https://github.com/fujimakishouten/karmia-database",
     "license": "MIT",
@@ -20,8 +20,7 @@
         "eslint": ">=3.5.0",
         "expect.js": ">=0.3.1",
         "istanbul": ">=0.4.5",
-        "jsonschema": ">=1.1.0",
-        "karmia-database-adapter-memory": ">=0.1.8",
+        "karmia-database-adapter-memory": ">=0.2.0",
         "mocha": ">=2.4.5"
     },
     "engines": {
